@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.3.0/css/all.min.css" integrity="sha512-SzlrxWUlpfuzQ+pcUCosxcglQRNAq/DZjVsC0lE40xsADsfeQoEypE+enwcOiGjk/bSuGGKHEyjSoQ1zVisanQ==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+</head>
+<title>TODO LIST</title>
+<body>
+    <div>
+        <input type="text" id="tf" value="" placeholder="enter text"/>
+        <button>Add Task</button>
+    </div>
+    <input type="text" id="hf" hidden/>
+    <div id="todos"></div>
+    <script>
+        let btnr=document.getElementsByTagName("button")[0]
+        btnr.addEventListener("click",addtask)
+        function addtask()
+        {
+            let tfv=document.getElementById("tf").value
+                        if(tfv=="")
+            {
+                window.alert("text field should not be empty")
+            }
+            else
+            {
+                let x= JSON.parse(localStorage.getItem("arr"))
+              
+                if(x==undefined){
+                    a=[]
+                    a.push(tfv)
+                    localStorage.setItem("arr",JSON.stringify(a))
+ 
+            }
+            else{
+                a=x
+                a.push(tfv)
+                localStorage.setItem("arr",JSON.stringify(a))
+            }
+          
+            
+        }
+        disp()
+    }
+    function disp()
+    {
+        let dref=document.getElementById("todos")
+        dref.innerHTML=""
+        let x=JSON.parse(localStorage.getItem("arr"))
+        x.forEach((item,i)=>{
+console.log(item)
+         let nelr=document.createElement("div")
+        let etxt=`${item} <i class="fa-solid fa-pencil" onclick="setdata(${i})"></i> <i class="fa-solid fa-trash-can-arrow-up" onclick="del(${i})" ></i>`
+         nelr.innerHTML=etxt
+        dref.appendChild(nelr)
+
+        })
+    }
+    disp()
+    function del(ind)
+    {
+        let x=JSON.parse(localStorage.getItem("arr"))
+        x.splice(ind,1)
+        localStorage.setItem("arr",JSON.stringify(x))
+        disp()
+    }
+    function setdata(ind)
+    {
+        let x=JSON.parse(localStorage.getItem("arr"))
+        document.getElementById("tf").value=x[ind]
+        btnr.innerHTML="update"
+        btnr.removeEventListener("click",addtask)
+        btnr.addEventListener("click",update)
+        document.getElementById("hf").value=ind
+    }
+    function update()
+    {
+        let tfv=document.getElementById("tf").value
+        let ind=parseInt(document.getElementById("hf").value)
+        let x=JSON.parse(localStorage.getItem("arr"))
+        x[ind]=tfv
+        localStorage.setItem("arr",JSON.stringify(x))
+        btnr.innerHTML="addtask"
+        btnr.removeEventListener("click",update)
+        btnr.addEventListener("click",addtask)
+        disp()
+    }
+    </script>
+</body>
+</html>
